@@ -1,0 +1,84 @@
+buildscript {
+    ext {
+        kotlinVersion = "1.2.40" +
+                ""
+        wildflyVersion = "11.0.0.Final"
+        wildflyHome = "${rootDir}/build/unpacked/dist/wildfly-${wildflyVersion}"
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
+    }
+}
+
+plugins {
+    id "org.sonarqube" version "2.5"
+}
+
+configurations {
+    install
+}
+
+apply plugin: "java"
+apply plugin: "kotlin"
+apply plugin: "kotlin-allopen"
+apply plugin: "kotlin-noarg"
+apply plugin: "war"
+
+allOpen {
+    annotation("javax.ejb.Stateless")
+    annotation("javax.ws.rs.Path")
+}
+
+noArg {
+    annotation("javax.ws.rs.Path")
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://repository.jboss.org/nexus/content/groups/public-jboss" }
+    maven { url "https://repository.jboss.org/nexus/content/repositories" }
+    maven { url "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases" }
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    providedCompile "javax:javaee-api:8.0"
+    // Delete dom4j in \JEA6-Kweeter\Kweeter-Backend\build\libs\exploded\Kweeter-Backend.war\WEB-INF\lib
+    providedCompile "dom4j:dom4j:1.6.1"
+    providedCompile "jboss:jbosssx:3.2.3"
+    providedCompile "jboss:jboss-jaas:3.2.3"
+
+    // https://mvnrepository.com/artifact/javax.mail/javax.mail-api
+    compile 'io.github.cdimascio:java-dotenv:3.1.0'
+
+    compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    // https://mvnrepository.com/artifact/postgresql/postgresql
+    compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
+
+    compile group: "javax", name: "javaee-web-api", version: "8.0"
+    // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
+
+    compile 'com.github.PTS-S62-E:Osake:3.1.0'
+    install "org.wildfly:wildfly-dist:${wildflyVersion}@zip"
+}
+
+test {
+    environment "JBOSS_HOME", rootProject.wildflyHome
+    systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+}
+
+task unzipWildFlyAppServer(type: Copy) {
+    from zipTree(configurations.install.singleFile)
+    into file("${buildDir}/unpacked/dist")
+    tasks.test.dependsOn unzipWildFlyAppServer
+}
