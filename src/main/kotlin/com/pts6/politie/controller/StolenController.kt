@@ -22,8 +22,8 @@ class StolenController {
     @GET
     @Path("/{vehicleId}")
     @Produces(APPLICATION_JSON)
-    fun getStolenVehicleById(id: Long): Response {
-        return Response.ok(this.stolenVehicleService.getStolenVehicleById(id)).build()
+    fun getStolenVehicleById(@PathParam("vehicleId") vehicleId: Long): Response {
+        return Response.ok(this.stolenVehicleService.getStolenVehicleById(vehicleId)).build()
     }
 
     @POST

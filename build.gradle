@@ -1,7 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = "1.2.40" +
-                ""
+        kotlinVersion = "1.2.41"
         wildflyVersion = "11.0.0.Final"
         wildflyHome = "${rootDir}/build/unpacked/dist/wildfly-${wildflyVersion}"
     }
@@ -59,6 +58,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/javax.mail/javax.mail-api
     compile 'io.github.cdimascio:java-dotenv:3.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
 
     compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
