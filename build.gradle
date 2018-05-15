@@ -70,7 +70,7 @@ dependencies {
 
     compile 'com.github.PTS-S62-E:Osake:3.1.0'
     compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.9.1.Final'
-    install "org.wildfly:wildfly-dist:${wildflyVersion}@zip"
+    compile 'com.thetransactioncompany:cors-filter:2.1'
 }
 
 test {
