@@ -67,4 +67,17 @@ class AntaminenService {
         return Gson().fromJson(bodyString)
     }
 
+    fun getVehicleByLicensePlate(licensePlate:String) {
+        val antaminenCarUrl = "${this.getAntaminenUrl()}/vehicles/licensePlate/$licensePlate/history/ownership"
+        val request = Request
+                .Builder()
+                .url(antaminenCarUrl)
+//                .header("Authorization", this.retrieveJwtToken())
+                .build()
+
+        val requestResult = this.getHttpClient().newCall(request).execute()!!
+        val bodyString = requestResult.body()!!.string()!!
+        return Gson().fromJson(bodyString)
+    }
+
 }
