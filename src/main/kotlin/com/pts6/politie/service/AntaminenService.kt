@@ -67,7 +67,9 @@ class AntaminenService {
         return Gson().fromJson(bodyString)
     }
 
-    fun getVehicleByLicensePlate(licensePlate:String) {
+    fun getVehicleByLicensePlate(licensePlate: String) {
+
+        // Example: xx-yy-69
         val antaminenCarUrl = "${this.getAntaminenUrl()}/vehicles/licensePlate/$licensePlate/history/ownership"
         val request = Request
                 .Builder()
@@ -79,5 +81,9 @@ class AntaminenService {
         val bodyString = requestResult.body()!!.string()!!
         return Gson().fromJson(bodyString)
     }
+}
 
+fun main(args: Array<String>) {
+    val a = AntaminenService()
+    a.getVehicleByLicensePlate("TestPlate")
 }
