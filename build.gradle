@@ -52,6 +52,8 @@ dependencies {
     providedCompile "jboss:jbosssx:3.2.3"
     providedCompile "jboss:jboss-jaas:3.2.3"
 
+    compile 'com.github.PTS-S62-E:Osake:3.4.1'
+
     // https://mvnrepository.com/artifact/javax.mail/javax.mail-api
     compile 'io.github.cdimascio:java-dotenv:3.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -63,8 +65,6 @@ dependencies {
 
     compile group: "javax", name: "javaee-web-api", version: "8.0"
     // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
-
-    compile 'com.github.PTS-S62-E:Osake:3.1.0'
     compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.9.1.Final'
 }
 

@@ -2,6 +2,7 @@ package com.pts6.politie.controller
 
 import com.pts6.politie.domain.StolenVehicle
 import com.pts6.politie.service.StolenVehicleService
+import com.pts62.common.finland.communication.rest.AntaminenService
 import javax.inject.Inject
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -12,6 +13,15 @@ class StolenController {
 
     @Inject
     private lateinit var stolenVehicleService: StolenVehicleService
+
+    @Inject
+    private lateinit var antaminenService: AntaminenService
+
+    @GET
+    @Produces(APPLICATION_JSON)
+    fun getVehicleByLicensePlate(@PathParam("licensePlate") licensePlate: String): Response {
+        return Response.ok(antaminenService.getVehicleByLicensePlate(licensePlate)).build()
+    }
 
     @GET
     @Produces(APPLICATION_JSON)
