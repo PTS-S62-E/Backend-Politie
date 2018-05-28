@@ -5,12 +5,14 @@ import org.hibernate.search.exception.EmptyQueryException
 import org.hibernate.search.jpa.FullTextEntityManager
 import org.hibernate.search.jpa.Search
 import javax.ejb.Stateless
+import javax.enterprise.inject.Default
 import javax.persistence.EntityManager
 import javax.persistence.EntityManagerFactory
 import javax.persistence.PersistenceContext
 import javax.persistence.PersistenceUnit
 
 @Stateless
+@Default
 class StolenVehicleService {
 
     @PersistenceContext
@@ -21,25 +23,28 @@ class StolenVehicleService {
 
     private var fullTextEntityManager: FullTextEntityManager? = null
 
-    fun getAllStolenVehicles(isStolen: Boolean = true): List<StolenVehicle> =
+    fun getAllStolenVehicles(isStolen: Boolean): List<StolenVehicle> =
             this.entityManager
                     .createNamedQuery("stolenvehicle.ifstolen")
                     .setParameter("is_stolen", isStolen)
                     .resultList
                     .filterIsInstance<StolenVehicle>()
 
-    fun insertStolenVehicle(stolenVehicle: StolenVehicle) {
+    fun insertStolenVehicle(stolenVehicle: StolenVehicle): Boolean {
         this.entityManager.persist(stolenVehicle)
+        return true
     }
 
     fun getStolenVehicleById(id: Long) = this.entityManager.find(StolenVehicle::class.java, id)
 
-    fun updateStolenVehicle(stolenVehicle: StolenVehicle) {
+    fun updateStolenVehicle(stolenVehicle: StolenVehicle): Boolean {
         this.entityManager.merge(stolenVehicle)
+        return true
     }
 
-    fun deleteStolenVehicle(id: Long) {
+    fun deleteStolenVehicle(id: Long): Boolean {
         this.entityManager.remove(this.entityManager.find(StolenVehicle::class.java, id))
+        return true
     }
 
     private fun getFullTextEntityManager(): FullTextEntityManager {

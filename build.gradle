@@ -66,6 +66,7 @@ dependencies {
     compile group: "javax", name: "javaee-web-api", version: "8.0"
     // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
     compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.9.1.Final'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
 }
 
 test {

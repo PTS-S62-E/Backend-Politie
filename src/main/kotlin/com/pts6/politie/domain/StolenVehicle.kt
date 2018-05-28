@@ -22,5 +22,7 @@ data class StolenVehicle(
         val hardwareSn: String = "",
         @Column
         @Field
-        val stolen: Boolean = false
+        val stolen: Boolean = false,
+        @Transient
+        val euroStolenVehicle: EuroStolenVehicle? = null
 ) : Serializable
