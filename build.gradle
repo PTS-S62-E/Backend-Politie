@@ -64,7 +64,7 @@ dependencies {
     compile group: "javax", name: "javaee-web-api", version: "8.0"
     // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
 
-    compile 'com.github.PTS-S62-E:Osake:3.1.0'
+    compile 'com.github.PTS-S62-E:Osake:4.0'
     compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.9.1.Final'
 }
 
