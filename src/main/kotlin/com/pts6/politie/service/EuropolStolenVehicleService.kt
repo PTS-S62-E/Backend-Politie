@@ -13,7 +13,7 @@ import javax.ejb.Stateless
 @Stateless
 class EuropolStolenVehicleService : IStolenVehicleService {
 
-    private val baseUrl = "http://localhost:3000/stolenVehicles/"
+    private val baseUrl = "http://192.168.24.101/"
     private val mediaTypeJson = MediaType.parse("application/json")
     private val httpClient = OkHttpClient.Builder().build()
 
