@@ -13,7 +13,7 @@ import javax.ejb.Stateless
 @Stateless
 class EuropolStolenVehicleService : IStolenVehicleService {
 
-    private val baseUrl = "http://192.168.24.101/"
+    private val baseUrl = "http://192.168.24.101:8000/api/vehicles/"
     private val mediaTypeJson = MediaType.parse("application/json")
     private val httpClient = OkHttpClient.Builder().build()
 
@@ -36,7 +36,7 @@ class EuropolStolenVehicleService : IStolenVehicleService {
     override fun updateStolenVehicle(euroStolenVehicle: EuroStolenVehicle): Boolean {
         val requestBody = RequestBody.create(mediaTypeJson, euroStolenVehicle.toJson())
         val request = Request.Builder()
-                .url("$baseUrl${euroStolenVehicle.id}")
+                .url("$baseUrl${euroStolenVehicle.serialNumber}")
                 .put(requestBody)
                 .build()
         val response = this.httpClient.newCall(request).execute()
