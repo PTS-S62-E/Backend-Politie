@@ -8,12 +8,6 @@ node {
     stage 'Clone sources'
         git url: 'https://github.com/PTS-S62-E/Backend-Politie.git'
 
-    stage 'Build'
-        rtGradle.run buildFile: 'build.gradle', tasks: 'build war --stacktrace --info'
-
-    stage 'Test'
-        rtGradle.run rootDir: "", buildFile: 'build.gradle', tasks: 'test'
-
     stage 'Artifactory configuration'
         // Set Artifactory repositories for dependencies resolution and artifacts deployment.
         rtGradle.deployer repo:'libs-gradle-release-local', server: server
