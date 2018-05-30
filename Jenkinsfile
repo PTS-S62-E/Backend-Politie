@@ -3,6 +3,7 @@ node {
     def server = Artifactory.server "Artifactory"
     // Create an Artifactory Gradle instance.
     def rtGradle = Artifactory.newGradleBuild()
+    rtGradle.tool = "Gradle-4.7"
 
     stage 'Clone sources'
         git url: 'https://github.com/PTS-S62-E/Backend-Politie.git'
@@ -14,8 +15,6 @@ node {
         rtGradle.run rootDir: "/", buildFile: 'build.gradle', tasks: 'test'
 
     stage 'Artifactory configuration'
-        // Tool name from Jenkins configuration
-        rtGradle.tool = "Gradle-4.7"
         // Set Artifactory repositories for dependencies resolution and artifacts deployment.
         rtGradle.deployer repo:'libs-gradle-release-local', server: server
         rtGradle.resolver repo:'libs-gradle-release', server: server
