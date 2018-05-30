@@ -9,7 +9,7 @@ node {
         git url: 'https://github.com/PTS-S62-E/Backend-Politie.git'
 
     stage 'Build'
-        rtGradle.run rootDir: "", buildFile: 'build.gradle', tasks: 'build --stacktrace'
+        rtGradle.run rootDir: "", buildFile: 'build.gradle', tasks: 'build --stacktrace --info'
 
     stage 'Test'
         rtGradle.run rootDir: "", buildFile: 'build.gradle', tasks: 'test'
