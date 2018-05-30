@@ -9,10 +9,10 @@ node {
         git url: 'https://github.com/PTS-S62-E/Backend-Politie.git'
 
     stage 'Build'
-        rtGradle.run rootDir: "/", buildFile: 'build.gradle', tasks: 'build'
+        rtGradle.run rootDir: "", buildFile: 'build.gradle', tasks: 'build'
 
     stage 'Test'
-        rtGradle.run rootDir: "/", buildFile: 'build.gradle', tasks: 'test'
+        rtGradle.run rootDir: "", buildFile: 'build.gradle', tasks: 'test'
 
     stage 'Artifactory configuration'
         // Set Artifactory repositories for dependencies resolution and artifacts deployment.
@@ -20,7 +20,7 @@ node {
         rtGradle.resolver repo:'libs-gradle-release', server: server
 
     stage 'Gradle build'
-        def buildInfo = rtGradle.run rootDir: "/", buildFile: 'build.gradle', tasks: 'clean artifactoryPublish'
+        def buildInfo = rtGradle.run rootDir: "", buildFile: 'build.gradle', tasks: 'clean artifactoryPublish'
 
     stage 'Publish build info'
         server.publishBuildInfo buildInfo
