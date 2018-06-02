@@ -17,6 +17,7 @@ import javax.inject.Singleton
 class QueueHandler{
 
 companion object {
+
     val country = "fi"
     val application = "police"
 }
@@ -25,6 +26,7 @@ companion object {
 
     @PostConstruct
     private fun setup() {
+        println("SETTING UP QUEUE*************************************************************************************************")
         connector = QueueConnector()
         this.handleRead()
     }
@@ -44,11 +46,12 @@ companion object {
         connector!!.readMessage(policeBuilder.build(), object : IQueueSubscribeCallback {
             override fun onMessageReceived(message: String) {
                 try {
+                    println("POLICE SYSTEM RECIEVED MESSAGE FROM REGISTRATION")
                     val mapper = ObjectMapper()
                     val trackingInfoDto = mapper.readValue(message, TrackingInfoDto::class.java)
                     TrackingSocket.sendMessage(trackingInfoDto)
                 } catch (e: Exception) {
-                    Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("Error in generating invoices for foreign countries").build())
+                    Sentry.getContext().recordBreadcrumb(BreadcrumbBuilder().setMessage("Error in recieving tracking").build())
                     Sentry.capture(e)
                 }
 
