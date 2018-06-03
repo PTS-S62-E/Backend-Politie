@@ -51,6 +51,7 @@ dependencies {
     providedCompile "dom4j:dom4j:1.6.1"
     providedCompile "jboss:jbosssx:3.2.3"
     providedCompile "jboss:jboss-jaas:3.2.3"
+    providedCompile "com.fasterxml.jackson.core:jackson-annotations:2.9.0"
 
     // https://mvnrepository.com/artifact/javax.mail/javax.mail-api
     compile 'io.github.cdimascio:java-dotenv:3.1.0'
@@ -66,6 +67,7 @@ dependencies {
 
     compile 'com.github.PTS-S62-E:Osake:3.1.0'
     compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.9.1.Final'
+    implementation 'com.github.PTS-S62-E:Europol-lib:1.1'
 }
 
 test {
