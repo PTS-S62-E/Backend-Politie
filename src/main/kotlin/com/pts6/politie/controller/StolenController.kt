@@ -1,7 +1,6 @@
 package com.pts6.politie.controller
 
 import com.pts.europollib.EuropolLib
-import com.pts.europollib.EuropolVehicle
 import com.pts6.politie.domain.PolitieVehicle
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
@@ -14,8 +13,12 @@ class StolenController {
 
     @GET
     @Produces(APPLICATION_JSON)
-    fun getStolenVehicles(): Response {
-        return Response.ok(europolLib.getVehicles()).build()
+    fun getStolenVehicles(@QueryParam("search") search: String?): Response {
+        return if (search == null) {
+            Response.ok(europolLib.getVehicles()).build()
+        } else {
+            Response.ok(europolLib.getVehicleWithSearch(search)).build()
+        }
     }
 
     @GET
