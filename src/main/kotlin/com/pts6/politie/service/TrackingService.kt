@@ -2,14 +2,9 @@ package com.pts6.politie.service
 
 import com.pts62.common.finland.communication.RegistrationMovementService
 import javax.ejb.Stateless
-import javax.persistence.EntityManager
-import javax.persistence.PersistenceContext
 
 @Stateless
 class TrackingService{
-
-    @PersistenceContext
-    private lateinit var entityManager: EntityManager
 
     /**
      * Contacts the registration movement to add a tracking to the database.
