@@ -1,8 +1,7 @@
 package com.pts6.politie.controller
 
-import com.pts6.politie.domain.StolenVehicle
-import com.pts6.politie.service.StolenVehicleService
-import javax.inject.Inject
+import com.pts.europollib.EuropolLib
+import com.pts6.politie.domain.PolitieVehicle
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
@@ -10,28 +9,31 @@ import javax.ws.rs.core.Response
 @Path("vehicles/stolen")
 class StolenController {
 
-    @Inject
-    private lateinit var stolenVehicleService: StolenVehicleService
+    private val europolLib = EuropolLib()
 
     @GET
     @Produces(APPLICATION_JSON)
-    fun getStolenVehicles(): Response {
-        return Response.ok(stolenVehicleService.getAllStolenVehicles()).build()
+    fun getStolenVehicles(@QueryParam("search") search: String?): Response {
+        return if (search == null) {
+            Response.ok(europolLib.getVehicles()).build()
+        } else {
+            Response.ok(europolLib.getVehicleWithSearch(search)).build()
+        }
     }
 
     @GET
-    @Path("/{vehicleId}")
+    @Path("/{serialNumber}")
     @Produces(APPLICATION_JSON)
-    fun getStolenVehicleById(@PathParam("vehicleId") vehicleId: Long): Response {
-        return Response.ok(this.stolenVehicleService.getStolenVehicleById(vehicleId)).build()
+    fun getStolenVehicleById(@PathParam("serialNumber") serialNumber: String): Response {
+        return Response.ok(this.europolLib.getVehicleBySerial(serialNumber)).build()
     }
 
     @POST
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    fun insertStolenVehicle(stolenVehicle: StolenVehicle): Response {
+    fun insertStolenVehicle(stolenVehicle: PolitieVehicle): Response {
         return try {
-            this.stolenVehicleService.insertStolenVehicle(stolenVehicle)
+            this.europolLib.insertVehicle(stolenVehicle.toEuropol())
             Response.ok().build()
         } catch (e: Exception) {
             Response.serverError().entity(e).build()
@@ -40,29 +42,9 @@ class StolenController {
 
     @DELETE
     @Produces(APPLICATION_JSON)
-    fun deleteVehicle(@PathParam("id") id: Long): Response {
-        this.stolenVehicleService.deleteStolenVehicle(id)
+    @Path("/{serialNumber}")
+    fun deleteVehicle(@PathParam("serialNumber") serialNumber: String): Response {
+        this.europolLib.deleteVehicle(serialNumber)
         return Response.ok().build()
     }
-
-    @PUT
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    fun updateStolenVehicle(stolenVehicle: StolenVehicle): Response {
-        return try {
-            this.stolenVehicleService.updateStolenVehicle(stolenVehicle)
-            Response.ok().build()
-        } catch (e: Exception) {
-            Response.serverError().entity(e).build()
-        }
-    }
-
-    @GET
-    @Path("/search/{query}")
-    @Produces(APPLICATION_JSON)
-    fun getStolenVehicleSearch(@PathParam("query") query: String): Response {
-        val vehicles = this.stolenVehicleService.searchStolenVehicles(query)
-        return Response.ok(vehicles).build()
-    }
-
 }
