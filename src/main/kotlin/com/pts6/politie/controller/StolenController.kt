@@ -1,7 +1,9 @@
 package com.pts6.politie.controller
 
 import com.pts.europollib.EuropolLib
+import com.pts.europollib.EuropolVehicle
 import com.pts6.politie.domain.PolitieVehicle
+import com.pts62.common.finland.communication.RegistrationMovementService
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
@@ -14,11 +16,12 @@ class StolenController {
     @GET
     @Produces(APPLICATION_JSON)
     fun getStolenVehicles(@QueryParam("search") search: String?): Response {
-        return if (search == null) {
-            Response.ok(europolLib.getVehicles()).build()
+        val vehicles: List<EuropolVehicle> = if (search == null) {
+            europolLib.getVehicles()
         } else {
-            Response.ok(europolLib.getVehicleWithSearch(search)).build()
+            europolLib.getVehicleWithSearch(search)
         }
+        return Response.ok(vehicles.filter { it.originCountry == "FI" }).build()
     }
 
     @GET
@@ -32,9 +35,13 @@ class StolenController {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     fun insertStolenVehicle(stolenVehicle: PolitieVehicle): Response {
+        val vehicle = RegistrationMovementService.getInstance().getVehicleByLicensePlate(stolenVehicle.licensePlate)
+        val serialNumber = vehicle!!.serialNumber
+        val completeStolenVehicle = stolenVehicle.copy(serialNumber = serialNumber)
+
         return try {
-            this.europolLib.insertVehicle(stolenVehicle.toEuropol())
-            Response.ok().build()
+            val v = this.europolLib.insertVehicle(completeStolenVehicle.toEuropol())
+            Response.ok(v).build()
         } catch (e: Exception) {
             Response.serverError().entity(e).build()
         }

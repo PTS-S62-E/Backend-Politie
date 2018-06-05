@@ -67,7 +67,7 @@ dependencies {
 
     compile 'com.github.PTS-S62-E:Osake:4.3.0'
     compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.9.1.Final'
-    implementation 'com.github.PTS-S62-E:Europol-lib:1.2'
+    implementation 'com.github.PTS-S62-E:Europol-lib:2.0.1'
 }
 
 test {
