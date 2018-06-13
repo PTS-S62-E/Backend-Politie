@@ -20,4 +20,16 @@ class VehicleInfoController {
         return Response.ok(vehicle).build()
     }
 
+    @GET
+    @Path("/{licensePlate}/{startDate}/{endDate}")
+    @Produces(APPLICATION_JSON)
+    fun getVehicleMovementHistory(@PathParam("licensePlate") licensePlate: String,
+                                  @PathParam("startDate") startDate: String,
+                                  @PathParam("endDate") endDate: String): Response {
+        println("called")
+        val registrationMovementService = RegistrationMovementService.getInstance()
+        val administrationDto = registrationMovementService.getTranslocationsByLicensePlate(licensePlate, startDate, endDate)
+        return Response.ok(administrationDto).build()
+    }
+
 }
