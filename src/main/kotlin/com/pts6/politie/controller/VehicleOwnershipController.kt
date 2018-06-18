@@ -3,16 +3,15 @@ package com.pts6.politie.controller
 import com.pts62.common.finland.communication.rest.AntaminenService
 import com.pts62.common.finland.communication.rest.IServiceConfiguration
 import com.pts62.common.finland.communication.rest.api.GetVehicleByLicensePlateResponse
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
+import java.util.*
+import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
 @Path("vehicles/ownership")
 class VehicleOwnershipController {
 
     private val antaminenService = AntaminenService()
+    private val base64Decoder = Base64.getDecoder()
 
     init {
         this.antaminenService.overrideConfig(object : IServiceConfiguration {
@@ -27,6 +26,14 @@ class VehicleOwnershipController {
     @Produces(MediaType.APPLICATION_JSON)
     fun getOwnership(@PathParam("licensePlate") licensePlate: String): GetVehicleByLicensePlateResponse {
         return this.antaminenService.getVehicleByLicensePlate(licensePlate)
+    }
+
+    @GET
+    @Path("/")
+    @Produces
+    fun getOwnershipBodyBase64(@QueryParam("licensePlateBase64") licensePlateB64: String): GetVehicleByLicensePlateResponse {
+        val licensePlate = this.base64Decoder.decode(licensePlateB64).toString()
+        return this.getOwnership(licensePlate)
     }
 
 }
