@@ -21,7 +21,7 @@ class StolenController {
         } else {
             europolLib.getVehicleWithSearch(search)
         }
-        return Response.ok(vehicles.filter { it.originCountry == "FI" }).build()
+        return Response.ok(vehicles.build()
     }
 
     @GET
