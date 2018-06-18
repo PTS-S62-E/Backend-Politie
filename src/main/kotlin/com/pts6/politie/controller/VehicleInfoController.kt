@@ -1,10 +1,8 @@
 package com.pts6.politie.controller
 
 import com.pts62.common.finland.communication.RegistrationMovementService
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
+import io.sentry.Sentry
+import javax.ws.rs.*
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 import javax.ws.rs.core.Response
 
@@ -15,9 +13,15 @@ class VehicleInfoController {
     @Path("/{licensePlate}")
     @Produces(APPLICATION_JSON)
     fun getVehicleInfo(@PathParam("licensePlate") licensePlate: String): Response {
-        val registrationMovementService = RegistrationMovementService.getInstance()
-        val vehicle = registrationMovementService.getVehicleByLicensePlate(licensePlate)
-        return Response.ok(vehicle).build()
+        try {
+            val registrationMovementService = RegistrationMovementService.getInstance()
+            val vehicle = registrationMovementService.getVehicleByLicensePlate(licensePlate)
+            return Response.ok(vehicle).build()
+        }
+        catch (e: Exception) {
+            Sentry.capture(e.toString())
+            throw WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.message).build())
+        }
     }
 
     @GET
@@ -26,10 +30,15 @@ class VehicleInfoController {
     fun getVehicleMovementHistory(@PathParam("licensePlate") licensePlate: String,
                                   @PathParam("startDate") startDate: String,
                                   @PathParam("endDate") endDate: String): Response {
-        println("called")
-        val registrationMovementService = RegistrationMovementService.getInstance()
-        val administrationDto = registrationMovementService.getTranslocationsByLicensePlate(licensePlate, startDate, endDate)
-        return Response.ok(administrationDto).build()
+        try {
+            val registrationMovementService = RegistrationMovementService.getInstance()
+            val administrationDto = registrationMovementService.getTranslocationsByLicensePlate(licensePlate, startDate, endDate)
+            return Response.ok(administrationDto).build()
+        }
+        catch (e: Exception) {
+            Sentry.capture(e.toString())
+            throw WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.message).build())
+        }
     }
 
 }
