@@ -14,7 +14,6 @@ class TrackingController{
     private lateinit var trackingService: TrackingService
 
     @POST
-    @Path("/")
     @Consumes(MediaType.TEXT_PLAIN)
     fun create(licensePlate: String): Response {
         try {
