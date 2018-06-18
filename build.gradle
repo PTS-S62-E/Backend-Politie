@@ -136,6 +136,7 @@ artifactory {
     clientConfig.info.setBuildName('new-strange-name')
     clientConfig.info.setBuildNumber('' + new java.util.Random(System.currentTimeMillis()).nextInt(20000))
     clientConfig.timeout = 600 // Artifactory connection timeout (in seconds). The default timeout is 300 seconds.
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
 }
 
 test {
