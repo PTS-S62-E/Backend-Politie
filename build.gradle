@@ -71,7 +71,7 @@ dependencies {
     compile group: "javax", name: "javaee-web-api", version: "8.0"
     // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
     compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.9.1.Final'
-    implementation 'com.github.PTS-S62-E:Europol-lib:2.0.1'
+    compile 'com.github.PTS-S62-E:Europol-lib:2.0.1'
 }
 
 allprojects {
@@ -136,7 +136,6 @@ artifactory {
     clientConfig.info.setBuildName('new-strange-name')
     clientConfig.info.setBuildNumber('' + new java.util.Random(System.currentTimeMillis()).nextInt(20000))
     clientConfig.timeout = 600 // Artifactory connection timeout (in seconds). The default timeout is 300 seconds.
-    compile 'com.squareup.okhttp3:okhttp:3.10.0'
 }
 
 test {
