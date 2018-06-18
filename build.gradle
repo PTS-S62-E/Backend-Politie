@@ -12,6 +12,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlinVersion"
+        //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
     }
 }
 
@@ -19,11 +21,15 @@ plugins {
     id "org.sonarqube" version "2.5"
 }
 
-apply plugin: "java"
+version = '0.1'
+group = 'com.pts6'
+
 apply plugin: "kotlin"
 apply plugin: "kotlin-allopen"
 apply plugin: "kotlin-noarg"
 apply plugin: "war"
+apply plugin: "maven-publish"
+apply plugin: "maven"
 
 allOpen {
     annotation("javax.ejb.Stateless")
@@ -66,6 +72,70 @@ dependencies {
     // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
     compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.9.1.Final'
     implementation 'com.github.PTS-S62-E:Europol-lib:2.0.1'
+}
+
+allprojects {
+    apply plugin: "com.jfrog.artifactory"
+}
+
+def javaProjects() {
+    subprojects.findAll { new File(it.projectDir, 'src').directory }
+}
+
+//configure(javaProjects()) {
+//    apply plugin: 'maven-publish'
+//    apply plugin: 'war'
+//    apply plugin: 'maven'
+//
+//    dependencies {
+//        testCompile 'junit:junit:4.7'
+//    }
+//
+//    publishing {
+//        publications {
+//            mavenJava(MavenPublication) {
+//                from components.war
+//                artifact(file("$rootDir/build/libs/Politie-Backend.war"))
+//            }
+//        }
+//    }
+//}
+
+artifactory {
+    contextUrl = 'http://85.144.215.28:8082/artifactory'  //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        //A closure defining publishing information
+        repository {
+            repoKey = 'libs-release-local'   //The Artifactory repository key to publish to
+            username = 'proftaak'          //The publisher user name
+            password = 'proftaak'       //The publisher password
+        }
+        defaults {
+            //List of Gradle Publications (names or objects) from which to collect the list of artifacts to be deployed to Artifactory.
+            publications {
+                mavenJava(MavenPublication) {
+                    from components.web
+                    artifact(file("$rootDir/build/libs/Politie-Backend.war"))
+                }
+            }
+            ////List of Gradle Configurations (names or objects) from which to collect the list of artifacts to be deployed to Artifactory.
+            publishConfigs('archives', 'published')
+            properties = ['qa.level': 'basic', 'q.os': 'win32, deb, osx']  //Optional map of properties to attach to all published artifacts
+
+            publishBuildInfo = true   //Publish build-info to Artifactory (true by default)
+            publishArtifacts = true   //Publish artifacts to Artifactory (true by default)
+            publishPom = true   //Publish generated POM files to Artifactory (true by default).
+            publishIvy = true   //Publish generated Ivy descriptor files to Artifactory (true by default).
+        }
+    }
+    // Redefine basic properties of the build info object
+    clientConfig.setIncludeEnvVars(true)
+    clientConfig.setEnvVarsExcludePatterns('*password*,*secret*')
+    clientConfig.setEnvVarsIncludePatterns('*not-secret*')
+    clientConfig.info.addEnvironmentProperty('test.adding.dynVar',new java.util.Date().toString())
+    clientConfig.info.setBuildName('new-strange-name')
+    clientConfig.info.setBuildNumber('' + new java.util.Random(System.currentTimeMillis()).nextInt(20000))
+    clientConfig.timeout = 600 // Artifactory connection timeout (in seconds). The default timeout is 300 seconds.
 }
 
 test {
